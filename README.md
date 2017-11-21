@@ -1,7 +1,5 @@
-# Modern Sword
-
-Modern Sword is a full rewrite of the legacy application SWORD used by
-the FORREST COUNTY Juvenile Detention Center.
+# Choredom-API
+Choredom-API is the back end API for the choredom educational application.
 
 ## Prequisites
 NodeJS  
