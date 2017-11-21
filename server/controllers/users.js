@@ -20,6 +20,8 @@ module.exports = {
           .create({
             password: hash,
             username: req.body.username,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
             admin: req.body.admin,
           })
           .then(user => res.status(201).send(user))
@@ -64,6 +66,8 @@ module.exports = {
           .update({
             username: req.body.username,
             password: hash,
+            firstName: req.body.firstName,
+            lastName: req.bdoy.lastName,
             admin: req.body.admin,
           })
           .then(() => res.status(200).send(user))
