@@ -1,6 +1,6 @@
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
-const LocalStrategy = require('passport-local').LocalStrategy;
+const Strategy = require('passport-local').Strategy;
 
 const User = require('../../models').User;
 const config = require('../config.js');
@@ -9,7 +9,7 @@ const bcrypt = require('bcrypt');
 
 module.exports = function(passport) {
   const opts = {
-      jwtFromRequest: ExtractJwt.fromAuthHeader(),
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: 'Our secret goes here',
       issuer: 'Choredom',
       audience: 'choredombitches.io',
@@ -18,7 +18,7 @@ module.exports = function(passport) {
     };
 
   passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
-    User.findOne({id: jwt_payload.id})
+    User.findOne({where: {id: jwt_payload.id}})
       .then(user => {
             if (!user) {
               return done(null, false, 'User not found');
@@ -31,15 +31,25 @@ module.exports = function(passport) {
       });
   }));
 
-  passport.use(new LocalStrategy((username, password, done) =>{
-    User.findOne({username: username}, (err, user)=> {
+  passport.use(new Strategy((username, password, done) => {
+    User.findOne({where: {username: username}}).then((user, err)=> {
       if (err) return done(err);
       if (!user) return done(null, false);
       bcrypt.compare(password, user.password).then((res,err) => {
         if (!res) return done(null, false);
         if (res) return done(null, user);
         if (err) return done(err);
-      })
-    })
-  })
+      });
+    });
+  }));
+
+  passport.serializeUser((user,done) => {
+    done(null, user.id);
+  });
+
+  passport.deserializeUser((id,done) => {
+    User.findById(id).then((user) => {
+      done(user)
+    });
+  });
 };

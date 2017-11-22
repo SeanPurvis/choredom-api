@@ -18,9 +18,10 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
+require('./server/config/passport/passport')(passport);
 
 // Require our routes into the application
-require('./server/routes')(app);
+require('./server/routes')(app,passport);
 app.get('*', (req, res) => res.status(200).send({
   message: 'Welcome to the beginning.'
 }));

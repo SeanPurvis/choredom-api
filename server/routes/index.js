@@ -3,7 +3,7 @@ const todoItemsController = require('../controllers').todoItems;
 const usersController = require('../controllers').users;
 
 // This file exists to map controllers to API endpoints
-module.exports = (app) => {
+module.exports = (app, passport) => {
   app.get('/api/v1/', (req, res) => res.status(200).send({
     message: 'Welcome to the API',
   }));
@@ -28,6 +28,9 @@ app.get('/api/v1/users', usersController.list);
 app.get('/api/v1/users/:userId', usersController.retrieve);
 app.put('/api/v1/users/:userId', usersController.update);
 app.delete('/api/v1/users/:userId', usersController.destroy);
+
+// Login route
+app.post('/api/v1/login', passport.authenticate('local', {failureRedirect: '/loginFail', successRedirect: '/'}));
 
 // For any other request on TodoItems
   app.all('/api/v1/todos/:todoId/items', (req, res) =>
