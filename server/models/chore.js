@@ -24,10 +24,20 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       allowNull: false,
     },
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER,
+    },
   });
   Chore.associate = (models) => {
     Chore.belongsTo(models.User, {
       foreignKey: 'userId',
+      onDelete: 'CASCADE',
+    });
+    Chore.belongsTo(models.Group, {
+      foreignKey: 'groupId',
       onDelete: 'CASCADE',
     });
   };
