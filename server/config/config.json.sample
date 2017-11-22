@@ -1,23 +1,24 @@
 {
   "development": {
-    "username": null,
-    "password": null,
-    "database": "database_dev",
+    "username": "root",
+    "password": "Import your password here",
+    "database": "choredom-dev",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "test": {
-    "username": null,
-    "password": null,
-    "database": "database_test",
+    "username": "root",
+    "password": "mpd5bb4b",
+    "database": "choredom-test",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "production": {
-    "username": null,
+    "username": "root",
     "password": null,
     "database": "database_production",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
+  "secret": "mpd5bb4b"
 }
