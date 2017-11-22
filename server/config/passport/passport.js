@@ -5,20 +5,26 @@ const User = require('../../models').User;
 const config = require('../config.js');
 
 module.exports = function(passport) {
-  var opts = {};
+  const opts = {
+      jwtFromRequest: ExtractJwt.fromAuthHeader(),
+      secretOrKey: 'Our secret goes here',
+      issuer: 'Choredom',
+      audience: 'choredombitches.io',
+      ignoreExpiration: false,
+      algorithms: ['HS256'],
+    };
 
-  opts.jwtFromRequest = ExtractJwt.fromAuthHeader();
-  opts.secretOrKey = config.secret;
   passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
-    User.findOne({id: jwt_payload.id}, function(err, user) {
-      if(err) {
-        return done(err, false);
-      }
-      if(user) {
-        done(null, user);
-      } else {
-        done(null, false);
-      }
-    });
+    User.findOne({id: jwt_payload.id})
+      .then(user => {
+            if (!user) {
+              return done(null, false, 'User not found');
+            }
+
+            return done(null, user);
+      })
+      .catch(err => {
+        return done(err);
+      });
   }));
 };
