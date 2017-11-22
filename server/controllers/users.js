@@ -22,7 +22,7 @@ module.exports = {
             username: req.body.username,
             firstName: req.body.firstName,
             lastName: req.body.lastName,
-            admin: req.body.admin,
+            email: req.body.email,
           })
           .then(user => res.status(201).send(user))
           .catch(error => res.status(400).send(error));
@@ -68,7 +68,6 @@ module.exports = {
             password: hash,
             firstName: req.body.firstName,
             lastName: req.bdoy.lastName,
-            admin: req.body.admin,
           })
           .then(() => res.status(200).send(user))
           .catch((error) => res.status(400).send(error));
