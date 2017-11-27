@@ -1,90 +1,81 @@
-const Chore = require('../models').Chore;
 const Group = require('../models').Group;
-const User = require('../models').User;
+const GroupSetting = require('../models').GroupSetting;
 
 moduel.export = {
   create(req, res) {
-    return Chore
+    return GroupSetting
       .create({
         name: req.body.name,
       })
-      .then(chore => res.status(201).send(chore))
+      .then(groupsetting => res.status(201).send(groupsetting))
       .catch(error => res.status(400).send(error));
   },
 
   list(req, res) {
-    return Chore
+    return GroupSetting
       .findAll({
-        include: [{
-          model: User,
-          as: 'user',
-        }],
-      })
-      .then(chores => res.status(200).send(chores))
-      .catch(error => res.status(400).send(error))
-  },
-
-  retrieve(req, res) {
-    return Chore
-      .findById(req.params.choreId, {
-        include: [{
-          model: User,
-          as: 'user',
-        }],
         include: [{
           model: Group,
           as: 'group',
         }],
       })
-      .then(chore => {
-        if (!chore) {
+      .then(groupsettings => res.status(200).send(groupsettings))
+      .catch(error => res.status(400).send(error))
+  },
+
+  retrieve(req, res) {
+    return GroupSetting
+      .findById(req.params.groupsettingId, {
+        include: [{
+          model: Group,
+          as: 'group',
+        }],
+      })
+      .then(groupsetting => {
+        if (!groupsetting) {
           return res.status(404).send({
-            message: 'Chore Not Found',
+            message: 'GroupSetting Not Found',
           });
         }
-        return res.status(200).send(chore);
+        return res.status(200).send(groupsetting);
       })
       .catch(error => res.status(400).send(error));
     },
 
     update(req, res) {
-      return Chore
-        .findById(req.params.choreId, {
-          include: [{
-            model: User,
-            as: 'user',
-          }],
+      return GroupSetting
+        .findById(req.params.groupsettingId, {
           include: [{
             model: Group,
             as: 'group',
           }],
         })
-        .then(chore => {
+        .then(groupsetting => {
           if(!todo) {
             return res.status(404).send({
-              message: 'Chore Not Found'
+              message: 'GroupSetting Not Found'
             });
           }
-          return chore
+          return groupsetting
             .update({
-              name: req.body.name || chore.name,
+              name: req.body.name || groupsetting.name,
             })
-            .then(() => res.status(200).send(chore))
+            .then(() => res.status(200).send(groupsetting))
             .catch((error) => res.status(400).send(error));
         })
         .catch((error) => res.status(400).send(error));
     },
 
     destroy(req, res) {
-      return Chore
-        .findById(req.params.choreId)
-        .then(chore => {
-          if (!chore) {
+      return GroupSetting
+        .findById(req.params.groupsettingId)
+        .then(groupsetting => {
+          if (!groupsetting) {
             return res.status(400).send({
-              message: 'Chore Not Found',
+              message: 'GroupSetting Not Found',
             });
           }
-          return chore
+          return groupsetting
             .destroy()
             .then(() => res.status(204).send())
             .catch(error => res.status(400).send(error));
