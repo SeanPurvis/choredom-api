@@ -2,7 +2,7 @@ const GroupUser = require('../models').GroupUser;
 const Group = require('../models').Group;
 const User = require('../models').User;
 
-moduel.export = {
+module.exports = {
   create(req, res) {
     return GroupUser
       .create({

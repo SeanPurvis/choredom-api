@@ -1,7 +1,7 @@
 const Group = require('../models').Group;
 const GroupSetting = require('../models').GroupSetting;
 
-moduel.export = {
+module.exports = {
   create(req, res) {
     return GroupSetting
       .create({
