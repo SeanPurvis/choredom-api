@@ -1,6 +1,6 @@
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
-const Strategy = require('passport-local').Strategy;
+const LocalStrategy = require('passport-local').Strategy;
 
 const User = require('../../models').User;
 const config = require('../config.js');
@@ -31,15 +31,14 @@ module.exports = function(passport) {
       });
   }));
 
-  passport.use(new Strategy((username, password, done) => {
+  passport.use(new LocalStrategy((username, password, done) => {
     User.findOne({where: {username: username}}).then((user, err)=> {
       if (err) return done(err);
       if (!user) return done(null, false);
-      bcrypt.compare(password, user.password).then((res,err) => {
+      bcrypt.compare(password, user.password).then((res) => {
         if (!res) return done(null, false);
         if (res) return done(null, user);
-        if (err) return done(err);
-      });
+      }).catch(()=>{return done(null, false)});
     });
   }));
 

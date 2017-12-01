@@ -21,7 +21,7 @@ app.use(passport.initialize());
 require('./server/config/passport/passport')(passport);
 
 // Require our routes into the application
-require('./server/routes')(app,passport);
+require('./server/routes')(app,passport,jwt);
 app.get('*', (req, res) => res.status(200).send({
   message: 'Welcome to the beginning.'
 }));
