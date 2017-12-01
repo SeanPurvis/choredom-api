@@ -6,8 +6,9 @@ const groupsController = require('../controllers').groups;
 const groupsusersController = require('../controllers').groupsusers;
 const groupsettingsController = require('../controllers').groupsettings;
 
+
 // This file exists to map controllers to API endpoints
-module.exports = (app, passport) => {
+module.exports = (app, passport, jwt) => {
   app.get('/api/v1/', (req, res) => res.status(200).send({
     message: 'Welcome to the API',
   }));
@@ -61,7 +62,38 @@ app.delete('/api/v1/groupsusers/:groupsusersId', groupsusersController.destroy);
 
 
 // Login route
-app.post('/api/v1/login', passport.authenticate('local', {failureRedirect: '/loginFail', successRedirect: '/'}));
+
+
+app.post('/api/v1/login', (req,res,next)=> {
+  passport.authenticate('local', (err, user, info)=>{
+    if(err){
+      return res.status(401).send({
+        success:false,
+        error: err
+      });
+    }
+
+    if(!user){
+      return res.status(401).send({
+        success:false,
+        error: info
+      });
+    }
+
+    const token = jwt.sign({
+      id: user.id
+    }, 'Your secret here', {
+      expiresIn: 432000, // In seconds = 5 days
+      audience: 'myapp.com',
+      issuer: 'myApp'
+    });
+
+    return res.send({
+      success:true,
+      token: token
+    })
+  })(req,res,next)
+});
 
 // For any other request on TodoItems
   app.all('/api/v1/todos/:todoId/items', (req, res) =>
